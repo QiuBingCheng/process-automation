@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f8f8;
+}
+
+.form-label {
+    padding: 10px;
+}
+
+.table-title {
+    margin: 0;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 5px;
+    /*background-color: #2989f1;
+    color: white;
+    */
+    padding: 10px;
+    border-radius: 10px;
+}
