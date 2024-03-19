@@ -9,6 +9,12 @@ import "primeicons/primeicons.css";
 import "./app.css";
 
 // Row Data Interface
+interface IRow2 {
+    site: string;
+    selected: string;
+}
+
+
 interface IRow {
     site: string;
     selected: boolean;
@@ -18,17 +24,22 @@ const App: React.FC = () => {
     // 表格数据
 
     // ########## TABLE 1 ########## //
-    const [rowData1, setRowData1] = useState<IRow[]>([
-        { site: 'Site A', selected: false },
-        { site: 'Site B', selected: true },
-        { site: 'Site C', selected: false },
-        { site: 'Site D', selected: true },
-        { site: 'Site E', selected: false }
+    const [rowData1, setRowData1] = useState([
+        { site: 'Site A', selected: "" },
+        { site: 'Site B', selected: "" },
+        { site: 'Site C', selected: "" },
+        { site: 'Site D', selected: "" },
+        { site: 'Site A', selected: "" },
+        { site: 'Site B', selected: "" },
+        { site: 'Site C', selected: "" }
     ]);
 
-    const [colDefs1, setColDefs1] = useState<ColDef<IRow>[]>([
-        { headerName: '站點', field: 'site', filter: 'agTextColumnFilter', flex: 1 },
-        { headerName: '選取', field: 'selected', editable: true, filter: 'agTextColumnFilter', width: 90 },
+    const [colDefs1, setColDefs1] = useState<ColDef[]>([
+        { headerName: '站點', field: 'site', filter: 'agTextColumnFilter', floatingFilter: true, flex: 1 },
+        {
+            headerName: '選取', field: 'selected', editable: true, headerCheckboxSelection: true,
+            headerCheckboxSelectionFilteredOnly: true, checkboxSelection: true, cellEditor: "agCheckboxCellEditor",
+        },
     ]);
 
     // ########## TABLE 2 ########## //
@@ -130,6 +141,8 @@ const App: React.FC = () => {
                             rowData={rowData1}
                             columnDefs={colDefs1}
                             getRowHeight={() => 30}
+                            rowSelection='multiple'
+                            suppressRowClickSelection={true}
                         />
                     </div>
                 </div>
