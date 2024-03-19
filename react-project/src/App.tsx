@@ -41,6 +41,12 @@ const App: React.FC = () => {
             headerCheckboxSelectionFilteredOnly: true, checkboxSelection: true, cellEditor: "agCheckboxCellEditor",
         },
     ]);
+    const [colDefs2, setColDefs2] = useState<ColDef[]>([
+        { headerName: '站點', field: 'site', filter: 'agTextColumnFilter', floatingFilter: true, flex: 1 },
+        {
+            headerName: '選取', field: 'selected', cellRenderer: 'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor'
+        }
+    ]);
 
     // ########## TABLE 2 ########## //
     const [rowData2, setRowData2] = useState<IRow[]>([
@@ -151,8 +157,9 @@ const App: React.FC = () => {
                     <div className="ag-theme-alpine" style={{ height: 200 }}>
                         <AgGridReact
                             rowData={rowData2}
-                            columnDefs={colDefs1}
+                            columnDefs={colDefs2}
                             getRowHeight={() => 30}
+                            suppressRowClickSelection={true}
                         />
                     </div>
                 </div>
