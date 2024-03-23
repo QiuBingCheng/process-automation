@@ -1,0 +1,13 @@
+/* Apply styles to the entire Ag Grid table */
+.ag-theme-alpine .ag-root-wrapper {
+    pointer-events: none;
+    /* Disable pointer events */
+}
+
+/* Apply styles to the cells in the Ag Grid table */
+.ag-theme-alpine .ag-cell {
+    background-color: #f2f2f2;
+    /* Set background color to gray */
+    color: #999;
+    /* Set text color to a darker shade of gray */
+}
