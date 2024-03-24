@@ -1,4 +1,5 @@
 'use strict';
+import { RowNode } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridReact } from 'ag-grid-react';
@@ -19,19 +20,35 @@ const Test = () => {
         { make: 'Nissan', model: 'Juke', price: 20675, checked: false },
     ]);
 
+    const updateRowData = (id: number) => {
+        console.log("updateRowData", id)
+        console.log(rowData)
+
+        // Option1
+        const gridApi = gridRef.current!.api;
+        const rowNode = gridApi.getRowNode(String(id)) as RowNode
+        rowNode.data["checked"] = !rowNode.data["checked"]
+        gridApi.refreshCells(
+            { rowNodes: [rowNode] }
+        )
+
+        // Option2 
+        // 如果是這個方法 就要把 rowdata 傳到 cell render 當作 Parameter
+
+        /*
+        const originalRowData = [...rowData];
+        const copiedRowData = JSON.parse(JSON.stringify(originalRowData));
+        copiedRowData[id]["checked"] = !copiedRowData[id]["checked"]
+        setRowData(copiedRowData)
+        */
+    };
     const CustomButtonComponent = (props: any) => {
         console.log("CustomButtonComponent")
         const id = props.node.id
-        const rowData = props.rowData
 
         const clickFun = () => {
-            const newValue = !props.value;
-            const gridApi = gridRef.current!.api;
-
-            rowData[id]["checked"] = newValue
-            gridApi.applyTransaction({
-                update: [rowData[id]],
-            })!;
+            console.log("clickFun")
+            updateRowData(id)
         }
         return <input type='checkbox' onChange={() => { }} onClick={clickFun} checked={props.value}></input>;
     };
@@ -39,11 +56,19 @@ const Test = () => {
     const [columnDefs, setColumnDefs] = useState([
         { headerName: "Make & Model", field: "make", flex: 2, filter: true },
         { field: "price", flex: 1, filter: true },
-        { field: "checked", filter: true, cellRenderer: CustomButtonComponent, cellRendererParams: { rowData: rowData } }
+        { field: "checked", filter: true, cellRenderer: CustomButtonComponent }
     ]);
 
     const showRowData = () => {
-        console.log(rowData)
+        console.log("showRowData")
+
+        const originalRowData = [...rowData];
+        const copiedRowData = JSON.parse(JSON.stringify(originalRowData));
+
+        copiedRowData[0]["checked"] = true
+        copiedRowData[1]["checked"] = true
+        setRowData(copiedRowData)
+        //console.log(rowData)
     }
     return (
         <div style={{ width: '600px', height: '400px' }}>
