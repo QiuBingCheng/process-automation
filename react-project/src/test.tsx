@@ -1,53 +1,60 @@
-import React, { useState, useRef } from 'react';
-import { Steps } from 'primereact/steps';
-import { Toast } from 'primereact/toast';
+'use strict';
+import { RowNode } from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-grid.css';
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import { AgGridReact } from 'ag-grid-react';
+import { useRef, useState } from 'react';
 
+/* Customer render with Check box */
 
 const Test = () => {
-    const [activeIndex, setActiveIndex] = useState(1);
-    const toast = useRef(null);
-    const items = [
-        {
-            label: 'Personal',
-            command: (event: any) => {
-                if (toast.current)
-                    (toast.current as any)({ severity: 'info', summary: 'First Step', detail: event.item.label });
-            }
-        },
-        {
-            label: 'Seat',
-            command: (event: any) => {
-                if (toast.current)
-                    (toast.current as any)({ severity: 'info', summary: 'Seat Selection', detail: event.item.label });
-            }
-        },
-        {
-            label: 'Payment',
-            command: (event: any) => {
-                if (toast.current)
-                    (toast.current as any)({ severity: 'info', summary: 'Pay with CC', detail: event.item.label });
-            }
-        },
-        {
-            label: 'Confirmation',
-            command: (event: any) => {
-                if (toast.current)
-                    (toast.current as any)({ severity: 'info', summary: 'Last Step', detail: event.item.label });
-            }
+
+    const gridRef = useRef<AgGridReact>(null);
+
+    const [rowData, setRowData] = useState<any[]>([
+        { result: "pass", age: 18, detail: "fail@thiswhyaer,pass@cool" },
+        { result: "fail", age: 20, detail: "other" },
+        { result: "fail", age: 1, detail: "other" },
+        { result: 'pass', age: 9, detail: "other" },
+        { result: 'fail', age: 14, detail: "other" },
+        { result: 'fail', age: 28, detail: "other" },
+        { result: 'pass', age: 25, detail: "other" },
+    ]);
+
+    const CustomCellComponent = (props: any) => {
+        const id = props.node.id
+
+        if (id == 0) {
+            let detail = props.value.split(",")
+
+            const parsedValues = detail.map((ele: string) => [ele.substring(0, 4), ele.substring(5)])
+            return (
+                parsedValues.map((ele: string[]) =>
+                    <span style={{ color: ele[0] == "pass" ? "blue" : "red", marginLeft: '2px' }}>{ele[1]}</span>
+                )
+            )
         }
-    ];
+
+        return <span>{props.value}</span>
+    };
+
+    const [columnDefs, setColumnDefs] = useState([
+        { headerName: "result", field: "result", flex: 2, filter: true },
+        { field: "age", flex: 1, filter: true },
+        { field: "detail", filter: true, cellRenderer: CustomCellComponent }
+    ]);
+
+
     return (
-        <div className="steps-demo">
-            <Toast ref={toast}></Toast>
+        <div style={{ width: '600px', height: '400px' }}>
 
-            <div className="card">
-                <h5>Basic</h5>
-                <Steps model={items} />
-
-                <h5>Interactive</h5>
-                <Steps model={items} activeIndex={activeIndex} onSelect={(e) => setActiveIndex(e.index)} readOnly={false} />
+            <div
+                style={{ width: '80%', height: '80%' }}
+                className="ag-theme-alpine"
+            >
+                <AgGridReact rowData={rowData} columnDefs={columnDefs} />
             </div>
         </div>
-    )
-}
+    );
+};
 export default Test;
